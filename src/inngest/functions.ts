@@ -69,15 +69,12 @@ export const codeAgentFunction = inngest.createFunction(
           parameters: z.object({
             files: z.array(z.object({ path: z.string(), content: z.string() })),
           }),
-          handler: async (
-            { files },
-            { step, network }: Tool.Options<AgentState>
-          ) => {
+          handler: async ({ files }, { step, network }) => {
             const newFiles = await step?.run(
               "createOrUpdateFiles",
               async () => {
                 try {
-                  const updatedFiles = network.state.data.files || {}
+                  const updatedFiles = network.state.data || {}
                   const sandbox = await getSandbox(sandboxId)
                   for (const file of files) {
                     await sandbox.files.write(file.path, file.content)
@@ -154,10 +151,12 @@ export const codeAgentFunction = inngest.createFunction(
       const host = sandbox.getHost(3000)
       return `https://${host}`
     })
+
     await step.run("save-result", async () => {
       if (isError) {
         return await prisma.message.create({
           data: {
+            projectId: event.data.projectId,
             content: "Something went wrong! Please try again.",
             role: "ASSISTANT",
             type: "ERROR",
@@ -166,6 +165,7 @@ export const codeAgentFunction = inngest.createFunction(
       }
       return await prisma.message.create({
         data: {
+          projectId: event.data.projectId,
           content: result.state.data.summary,
           role: "ASSISTANT",
           type: "RESULT",
