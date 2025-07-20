@@ -5,6 +5,12 @@ import z from "zod"
 import { generateSlug } from "random-word-slugs"
 import { TRPCError } from "@trpc/server"
 export const projectsRouter = createTRPCRouter({
+  getMany: baseProcedure.query(async () => {
+    const projects = await prisma.project.findMany({
+      orderBy: { updatedAt: "desc" },
+    })
+    return projects
+  }),
   getOne: baseProcedure
     .input(
       z.object({
