@@ -38,8 +38,11 @@ export const ProjectForm = () => {
         // TODO: Invalidate usage stats
       },
       onError: (error) => {
-        // TODO: Redirect to billing page if specific error
         toast.error(error.message)
+        if (error.data?.code === "UNAUTHORIZED") {
+          router.push("/sign-in")
+        }
+        // TODO: Redirect to billing page if specific error
       },
     })
   )
