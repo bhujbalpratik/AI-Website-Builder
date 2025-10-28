@@ -21,6 +21,19 @@ import { TreeView } from "./tree-view"
 
 type FileCollection = { [path: string]: string }
 
+function decodeHtmlEntities(text: string): string {
+  // Gemini en su respuesta incluye entidades html como &lt; y &gt; que no se pueden decodificar en el navegador
+  if (typeof document === "undefined") {
+    return text
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+  }
+  const textarea = document.createElement("textarea")
+  textarea.innerHTML = text
+  return textarea.value
+}
+
 function getLanguageFromExtension(filename: string): string {
   const extension = filename.split(".").pop()?.toLowerCase()
   return extension || "text"
@@ -48,7 +61,7 @@ const FileBreadcrumb = ({ filePath }: FileBreadcrumbProps) => {
                 <span className="text-muted-foreground">{segment}</span>
               )}
             </BreadcrumbItem>
-            {isLast && <BreadcrumbSeparator />}
+            {!isLast && <BreadcrumbSeparator />}
           </Fragment>
         )
       })
@@ -108,6 +121,24 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
       setTimeout(() => setCopied(false), 2000)
     }
   }, [selectedFile, files])
+
+  const decodedCode = useMemo(() => {
+    // The AI sometimes wraps the code in backticks, which we need to remove.
+    if (!selectedFile || !files[selectedFile]) {
+      return ""
+    }
+    let code = decodeHtmlEntities(files[selectedFile] || "")
+
+    if (code.startsWith("```") && code.endsWith("```")) {
+      const lines = code.split("\n")
+      return lines.slice(1, lines.length - 1).join("\n")
+    } else if (code.startsWith("`") && code.endsWith("`")) {
+      return code.slice(1, -1)
+    }
+
+    return code
+  }, [selectedFile, files])
+
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel defaultSize={30} minSize={30} className="bg-sidebar">

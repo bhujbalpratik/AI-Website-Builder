@@ -14,6 +14,7 @@ import z from "zod"
 import { FRAGMENT_TITLE_PROMPT, PROMPT, RESPONSE_PROMPT } from "@/prompt"
 import { prisma } from "@/lib/db"
 import { parsedAgentOutput } from "@/lib/utils"
+import { SANDBOX_TIMEOUT } from "./types"
 
 interface AgentState {
   summary: string
@@ -26,6 +27,7 @@ export const codeAgentFunction = inngest.createFunction(
   async ({ event, step }) => {
     const sandboxId = await step.run("get-sandbox-id", async () => {
       const sandbox = await Sandbox.create("wibe-nextjs-test-2")
+      await sandbox.setTimeout(SANDBOX_TIMEOUT)
       return sandbox.sandboxId
     })
     const previousMessages = await step.run(
@@ -39,6 +41,7 @@ export const codeAgentFunction = inngest.createFunction(
           orderBy: {
             createdAt: "desc",
           },
+          take: 5,
         })
         for (const message of messages) {
           formattedMessages.push({
@@ -47,7 +50,7 @@ export const codeAgentFunction = inngest.createFunction(
             content: message.content,
           })
         }
-        return formattedMessages
+        return formattedMessages.reverse()
       }
     )
     const state = createState<AgentState>(
@@ -103,12 +106,15 @@ export const codeAgentFunction = inngest.createFunction(
           parameters: z.object({
             files: z.array(z.object({ path: z.string(), content: z.string() })),
           }),
-          handler: async ({ files }, { step, network }) => {
+          handler: async (
+            { files },
+            { step, network }: Tool.Options<AgentState>
+          ) => {
             const newFiles = await step?.run(
               "createOrUpdateFiles",
               async () => {
                 try {
-                  const updatedFiles = network.state.data || {}
+                  const updatedFiles = network.state.data.files || {}
                   const sandbox = await getSandbox(sandboxId)
                   for (const file of files) {
                     await sandbox.files.write(file.path, file.content)
@@ -225,6 +231,14 @@ export const codeAgentFunction = inngest.createFunction(
           },
         })
       }
+      await prisma.project.update({
+        where: {
+          id: event.data.projectId,
+        },
+        data: {
+          name: parsedAgentOutput(fragmentTitleOutput),
+        },
+      })
       return await prisma.message.create({
         data: {
           projectId: event.data.projectId,

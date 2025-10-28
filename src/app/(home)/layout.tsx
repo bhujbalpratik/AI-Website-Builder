@@ -1,3 +1,4 @@
+import Aurora from "@/components/aurora"
 import { Navbar } from "@/modules/home/ui/components/navbar"
 
 interface Props {
@@ -6,9 +7,18 @@ interface Props {
 
 export default function Layout({ children }: Props) {
   return (
-    <main className="flex flex-col min-h-screen max-h-screen">
+    <main className="relative flex flex-col min-h-screen max-h-screen max-w-screen">
+      <div className="absolute inset-0 -z-10">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>
       <Navbar />
-      <div className="absolute inset-0 -z-10 h-full w-full bg-background dark:bg-[radial-gradient(#393e4a_1px,transparent_1px)] bg-[radial-gradient(#dadde2_1px,transparent_1px)] [background-size:16px_16px]" />
+      {/* <div className="absolute inset-0 -z-10 h-full w-full bg-background dark:bg-[radial-gradient(#393e4a_1px,transparent_1px)] bg-[radial-gradient(#dadde2_1px,transparent_1px)] [background-size:16px_16px]" /> */}
+
       <div className="flex flex-1 flex-col px-4 pb-4">{children}</div>
     </main>
   )
