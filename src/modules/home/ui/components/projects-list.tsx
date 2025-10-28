@@ -14,7 +14,7 @@ export const ProjectsList = () => {
   const { data: projects } = useQuery(trpc.projects.getMany.queryOptions())
   if (!user) return null
   return (
-    <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4">
+    <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4 overflow-x-clip">
       <h2 className="text-2xl font-semibold">{user?.fullName}&apos;s Wibes</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {projects?.length === 0 && (
@@ -32,7 +32,7 @@ export const ProjectsList = () => {
             <Link href={`/projects/${project.id}`}>
               <div className="flex items-center gap-x-4">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.png"
                   alt="wibe"
                   width={32}
                   height={32}

@@ -38,7 +38,7 @@ export const ProjectHeader = ({ projectId }: Props) => {
             size="sm"
             className="focus-visible:ring-0 hover:bg-transparent hover:opacity-75 transition-opacity pl-2!"
           >
-            <Image src="/logo.svg" alt="Wibe" height={18} width={18} />
+            <Image src="/logo.png" alt="Wibe" height={18} width={18} />
             <span className="text-sm font-medium">{project.name}</span>
             <ChevronDownIcon />
           </Button>

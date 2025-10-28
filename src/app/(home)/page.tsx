@@ -4,20 +4,20 @@ import Image from "next/image"
 
 const Page = () => {
   return (
-    <div className="flex flex-col max-w-5xl mx-auto w-full">
+    <div className="flex flex-col max-w-5xl mx-auto w-full overflow-x-clip">
       <section className="space-y-6 py-[16vh] 2xl:py-48">
-        <div className="flex flex-col items-center ">
+        <div className="flex flex-col items-center space-y-2">
           <Image
-            src="/logo.svg"
+            src="/logo.png"
             alt="wibe"
-            width={50}
-            height={50}
+            width={70}
+            height={70}
             className="hidden md:block"
           />
           <h1 className="text-2xl md:text-5xl font-bold text-center">
             Build Something with Wibe
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground text-center">
+          <p className="text-lg md:text-xl text-muted-foreground text-center mt-2">
             Create Apps and websites by chatting with AI{" "}
           </p>
         </div>

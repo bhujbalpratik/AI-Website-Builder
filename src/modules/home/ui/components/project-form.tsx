@@ -105,7 +105,7 @@ export const ProjectForm = () => {
               disabled={isDisabled}
               type="submit"
               className={cn(
-                "size-8 rounded-full",
+                "size-8 rounded-full bg-[#7E2DFE] hover:bg-[#7E2DFE]/50",
                 isDisabled && "bg-muted-foreground border"
               )}
             >

@@ -1,7 +1,9 @@
 import { ProjectView } from "@/modules/projects/ui/views/project-view"
 import { getQueryClient, trpc } from "@/trpc/server"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
+import { Loader2Icon } from "lucide-react"
 import { Suspense } from "react"
+import { ErrorBoundary } from "react-error-boundary"
 
 interface Props {
   params: Promise<{ projectId: string }>
@@ -17,9 +19,23 @@ const Page = async ({ params }: Props) => {
   )
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <ProjectView projectId={projectId} />
-      </Suspense>
+      <ErrorBoundary
+        fallback={
+          <div className="h-screen flex items-center justify-center text-center text-2xl md:text-5xl font-bold">
+            Something went wrong !
+          </div>
+        }
+      >
+        <Suspense
+          fallback={
+            <p className="flex items-center justify-center mt-2">
+              <Loader2Icon className="animate-spin" /> Loading Project...
+            </p>
+          }
+        >
+          <ProjectView projectId={projectId} />
+        </Suspense>
+      </ErrorBoundary>
     </HydrationBoundary>
   )
 }

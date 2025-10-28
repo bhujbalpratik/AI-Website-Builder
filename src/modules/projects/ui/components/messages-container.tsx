@@ -24,12 +24,11 @@ export const MessagesContainer = ({
     trpc.messages.getMany.queryOptions(
       { projectId },
       {
-        // TODO: Temporarily live message update
-        refetchInterval: 5000,
+        refetchInterval: 2000,
       }
     )
   )
-  // TODO: Creating problem now
+
   useEffect(() => {
     const lastAssistantMessage = messages.findLast(
       (message) => message.role === "ASSISTANT"

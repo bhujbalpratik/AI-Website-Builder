@@ -20,7 +20,7 @@ export const Navbar = () => {
     >
       <div className="max-w-5xl mx-auto w-full flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="wibe" width={24} height={24} />
+          <Image src="/logo.png" alt="wibe" width={24} height={24} />
           <span className="font-semibold text-lg">Wibe</span>
         </Link>
         <SignedOut>
@@ -31,7 +31,9 @@ export const Navbar = () => {
               </Button>
             </SignUpButton>
             <SignInButton>
-              <Button size="sm">Sign In</Button>
+              <Button size="sm" className="bg-[#7E2DFE] hover:bg-[#7E2DFE]/50">
+                Sign In
+              </Button>
             </SignInButton>
           </div>
         </SignedOut>
