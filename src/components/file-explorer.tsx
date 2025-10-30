@@ -1,4 +1,4 @@
-import { CopyCheckIcon, CopyIcon, Divide } from "lucide-react"
+import { CopyCheckIcon, CopyIcon } from "lucide-react"
 import { useState, useMemo, useCallback, Fragment } from "react"
 import { Hint } from "@/modules/projects/ui/components/hint"
 import { Button } from "@/components/ui/button"
@@ -127,7 +127,7 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
     if (!selectedFile || !files[selectedFile]) {
       return ""
     }
-    let code = decodeHtmlEntities(files[selectedFile] || "")
+    const code = decodeHtmlEntities(files[selectedFile] || "")
 
     if (code.startsWith("```") && code.endsWith("```")) {
       const lines = code.split("\n")
@@ -168,7 +168,7 @@ export const FileExplorer = ({ files }: FileExplorerProps) => {
             </div>
             <div className="flex-1 overflow-auto">
               <CodeView
-                code={files[selectedFile]}
+                code={decodedCode}
                 lang={getLanguageFromExtension(selectedFile)}
               />
             </div>

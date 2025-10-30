@@ -18,6 +18,8 @@ import { FileExplorer } from "@/components/file-explorer"
 import { UserControl } from "@/components/user-control"
 import { useAuth } from "@clerk/nextjs"
 import { ErrorBoundary } from "react-error-boundary"
+import Lottie from "lottie-react"
+import animationData from "../../../../../public/json/wibe-loading.json"
 
 interface Props {
   projectId: string
@@ -28,6 +30,7 @@ export const ProjectView = ({ projectId }: Props) => {
   const hasProAccess = has?.({ plan: "pro" })
   const [activeFragment, setActiveFragment] = useState<Fragment | null>(null)
   const [tabState, setTabState] = useState<"preview" | "code">("preview")
+  const hasContent = activeFragment?.files || activeFragment?.sandboxUrl
   // // Add this in your ProjectView component before the return statement
   // console.log("activeFragment:", activeFragment)
   // console.log("activeFragment.files:", activeFragment?.files)
@@ -76,6 +79,15 @@ export const ProjectView = ({ projectId }: Props) => {
           className="hover:bg-primary transition-colors"
         />
         <ResizablePanel defaultSize={65} minSize={50}>
+          {!hasContent && (
+            <div className="flex items-center justify-center h-full bg-background">
+              <Lottie
+                animationData={animationData}
+                loop={true}
+                style={{ width: 400, height: 400 }}
+              />
+            </div>
+          )}
           <Tabs
             className="h-full gap-y-0"
             defaultValue="preview"
