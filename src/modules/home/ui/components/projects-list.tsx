@@ -14,7 +14,7 @@ export const ProjectsList = () => {
   const { data: projects } = useQuery(trpc.projects.getMany.queryOptions())
   if (!user) return null
   return (
-    <div className="w-full bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4 overflow-x-clip">
+    <div className="w-full max-w-5xl mx-auto bg-white dark:bg-sidebar rounded-xl p-8 border flex flex-col gap-y-6 sm:gap-y-4 overflow-x-clip">
       <h2 className="text-2xl font-semibold">{user?.fullName}&apos;s Wibes</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {projects?.length === 0 && (
